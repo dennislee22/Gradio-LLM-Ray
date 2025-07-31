@@ -86,11 +86,11 @@ os.system("vllm serve Llama-SEA-LION-v3.5-70B-R --port 8081 --tensor-parallel-si
    
 12. Click on the `vllm-api` link to view the Ray dashboard and verify that the model is fully loaded across 2 workers with GPU each.
 
-<img width="1387" height="621" alt="image" src="https://github.com/user-attachments/assets/5a21755a-2d73-4989-ae99-20999fc85fc5" />
+<img width="900" height="621" alt="image" src="https://github.com/user-attachments/assets/5a21755a-2d73-4989-ae99-20999fc85fc5" />
 
 12. Click on the `gradio-app` link to use the chat🤖.
 
-<img width="1243" height="747" alt="image" src="https://github.com/user-attachments/assets/187cdf45-576b-4307-b569-07be114355b2" />
+<img width="900" height="747" alt="image" src="https://github.com/user-attachments/assets/187cdf45-576b-4307-b569-07be114355b2" />
 
 Sample vllm.log:
 ```
