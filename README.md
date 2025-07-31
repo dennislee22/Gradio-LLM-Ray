@@ -34,7 +34,7 @@ Example:
 5. Create another Application `gradio-app` with [app-gradio.py](app-gradio.py) to host the Gradio UI with a session profile without GPU. This Gradio UI will be communicating with the exposed API endpoint that runs vLLM and Ray in `vllm-api` Application. In total, there are 2 Applications.
 <img width="1042" height="318" alt="image" src="https://github.com/user-attachments/assets/606998b7-ee9e-4552-a1bd-10c6065702ae" />
 
-6. Start `vllm-api` application and verify that the model is fully loaded into GPU before starting `gradio-app` application. The code will spawn 1 Ray HEAD pod and its associated worker pod in seconds.
+6. Start the `vllm-api` application and ensure that the model is fully loaded into the GPU before starting the `gradio-app` application. The code will spawn one Ray HEAD pod along with its associated worker pod within seconds.
 
 ```
 NAME               READY   STATUS    RESTARTS   AGE     IP             NODE                                          NOMINATED NODE   READINESS GATES
@@ -42,7 +42,7 @@ NAME               READY   STATUS    RESTARTS   AGE     IP             NODE     
 dhw3fwp551sykyca   5/5     Running   0          7m13s   10.42.9.148    ares-ecs-ws-gpu01.ares.olympus.cloudera.com   <none>           <none>
 ```
 
-8. Thereafter, the model will be loaded into the GPU VRAM. Depending on the size of the model, loading might take some time to complete. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
+7. Subsequently, the model will be loaded into the GPU VRAM. Depending on the size of the model, loading might take some time to complete. Once loaded, it is ready to serve queries. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
   ```
    Loading safetensors checkpoint shards:  83% Completed | 25/30 [1:23:11<15:58, 191.63s/it]
    Loading safetensors checkpoint shards:  87% Completed | 26/30 [1:26:52<13:21, 200.44s/it]
