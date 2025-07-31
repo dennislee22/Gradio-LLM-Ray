@@ -84,7 +84,7 @@ os.system("vllm serve Llama-SEA-LION-v3.5-70B-R --port 8081 --tensor-parallel-si
 
 🗒️ `Llama-SEA-LION-v3.5-70B-R` supports a very long sequence length (context window) of 131,072 tokens. To handle this, vLLM needs to pre-allocate a large block of VRAM called the KV cache. To handle a 131,072 token sequence, it needs 20.00 GiB for the KV cache. Alternatively, you can restrict the maximum number of tokens the model can process in a single request. 
    
-12. Click on the `vllm-api` link to view the Ray dashboard and verify that the model is fully loaded across 2 workers with GPU each.
+11. Click on the `vllm-api` link to view the Ray dashboard and verify that the model is fully loaded across 2 workers with GPU each.
 
 <img width="900" height="621" alt="image" src="https://github.com/user-attachments/assets/5a21755a-2d73-4989-ae99-20999fc85fc5" />
 
