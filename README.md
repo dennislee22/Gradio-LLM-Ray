@@ -19,7 +19,7 @@
    
 2. Install python libraries.
   ```
-  pip install accelerate torch transformers ipywidgets pandas numpy ray[default]
+  pip install vllm torch transformers ipywidgets gradio ray[default]
   ```
 
 3. Download the pre-trained LLM into the project of the CAI/CML platform using either `git clone` or `wget`.
