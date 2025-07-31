@@ -36,7 +36,7 @@
   command = "ray start --head --block --include-dashboard=true --dashboard-port=$CDSW_READONLY_PORT --num-cpus=4 --num-gpus=1 &" 
   ```
 
-6. When running []() with single worker of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit in the VRAM of the GPU.
+6. When running [run-vllm.py](run-vllm.py) with single worker of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit in the VRAM of the GPU.
 ```
 ray_workers = workers.launch_workers(
     n=0, 
