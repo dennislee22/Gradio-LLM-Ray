@@ -28,7 +28,7 @@ Example:
   git lfs clone https://huggingface.co/aisingapore/Llama-SEA-LION-v3.5-70B-R
   ```
 
-4. Create Application to expose vLLM API endpoint. As VLLM utilizes Ray, this application will also host the Ray dashboard with 1 GPU device.
+4. Create Application to expose vLLM API endpoint. As VLLM utilizes Ray, this application will also host the Ray HEAD and Ray dashboard with 1 GPU device.
 <img width="460" height="730" alt="image" src="https://github.com/user-attachments/assets/d128c611-969d-4e01-9fe4-54a73f9db055" />
 
 5. Create another Application `gradio-app` with [app-gradio.py](app-gradio.py) to host the Gradio UI with a session profile without GPU. This Gradio UI will be communicating with the exposed API endpoint that runs vLLM and Ray in `vllm-api` Application. In total, there are 2 Applications.
