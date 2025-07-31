@@ -1,6 +1,6 @@
 # Gradio LLM with vLLM/Ray
 
-<img width="561" height="155" alt="image" src="https://github.com/user-attachments/assets/2f97f359-50fd-4260-99fc-6dcd367c30df" />
+<img width="700" height="284" alt="image" src="https://github.com/user-attachments/assets/d266785f-3fc0-417a-9425-329d9189af54" />
 
 - The article describes how vLLM and Ray work together to perform high-throughput, distributed inference on the massive 70-billion-parameter `Llama-SEA-LION-v3.5-70B-R` model.
 - vLLM uses Ray as its backend to manage the distributed worker processes, placing each tensor-parallel shard on the correct GPU across a multi-node cluster.
@@ -34,9 +34,15 @@ Example:
 5. Create another Application `gradio-app` with [app-gradio.py](app-gradio.py) to host the Gradio UI with a session profile without GPU. This Gradio UI will be communicating with the exposed API endpoint that runs vLLM and Ray in `vllm-api` Application. In total, there are 2 Applications.
 <img width="1042" height="318" alt="image" src="https://github.com/user-attachments/assets/606998b7-ee9e-4552-a1bd-10c6065702ae" />
 
-6. Start `vllm-api` application and verify that the model is fully loaded into GPU before starting `gradio-app` application. Depending on the size of the model, loading might take some time to complete.
-   
-7. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
+6. Start `vllm-api` application and verify that the model is fully loaded into GPU before starting `gradio-app` application. The code will spawn 1 Ray HEAD pod and its associated worker pod in seconds.
+
+```
+NAME               READY   STATUS    RESTARTS   AGE     IP             NODE                                          NOMINATED NODE   READINESS GATES
+16nhoob2jp0rc0dr   5/5     Running   0          7m36s   10.42.11.180   ares-ecs-ws-gpu03.ares.olympus.cloudera.com   <none>           <none>
+dhw3fwp551sykyca   5/5     Running   0          7m13s   10.42.9.148    ares-ecs-ws-gpu01.ares.olympus.cloudera.com   <none>           <none>
+```
+
+8. Thereafter, the model will be loaded into the GPU VRAM. Depending on the size of the model, loading might take some time to complete. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
   ```
    Loading safetensors checkpoint shards:  83% Completed | 25/30 [1:23:11<15:58, 191.63s/it]
    Loading safetensors checkpoint shards:  87% Completed | 26/30 [1:26:52<13:21, 200.44s/it]
