@@ -15,28 +15,48 @@
 
 ## Procedure
 
-1. Create Application to expose vLLM API endpoint. As VLLM utilizes Ray, this application will also host the Ray dashboard with 1 GPU device.
+1. Create a new CAI project.
+   
+2. Install python libraries.
+  ```
+  pip install accelerate torch transformers ipywidgets pandas numpy ray[default]
+  ```
+
+3. Download the pre-trained LLM into the project of the CAI/CML platform using either `git clone` or `wget`.
+Example:
+  ```
+  git lfs clone https://huggingface.co/aisingapore/Llama-SEA-LION-v3.5-70B-R
+  ```
+
+4. Create Application to expose vLLM API endpoint. As VLLM utilizes Ray, this application will also host the Ray dashboard with 1 GPU device.
 <img width="460" height="730" alt="image" src="https://github.com/user-attachments/assets/d128c611-969d-4e01-9fe4-54a73f9db055" />
 
-2. Create another Application to host the Gradio UI with session profile without GPU.
+5. Create another Application to host the Gradio UI with session profile without GPU.
 <img width="1042" height="318" alt="image" src="https://github.com/user-attachments/assets/606998b7-ee9e-4552-a1bd-10c6065702ae" />
 
-3. Start `vllm-api` application and verify that the model is fully loaded into GPU before starting `gradio-app` application. Depending on the size of the model, loading might take some time to complete.
+6. Start `vllm-api` application and verify that the model is fully loaded into GPU before starting `gradio-app` application. Depending on the size of the model, loading might take some time to complete.
    
-4. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
+7. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
   ```
+   Loading safetensors checkpoint shards:  83% Completed | 25/30 [1:23:11<15:58, 191.63s/it]
+   Loading safetensors checkpoint shards:  87% Completed | 26/30 [1:26:52<13:21, 200.44s/it]
+   Loading safetensors checkpoint shards:  90% Completed | 27/30 [1:28:01<08:02, 160.85s/it]
+   Loading safetensors checkpoint shards:  93% Completed | 28/30 [1:32:03<06:10, 185.23s/it]
+   Loading safetensors checkpoint shards:  97% Completed | 29/30 [1:35:56<03:19, 199.54s/it]
+   Loading safetensors checkpoint shards: 100% Completed | 30/30 [1:40:29<00:00, 221.61s/it]
+   ....  
   INFO:     Started server process [332]
   INFO:     Waiting for application startup.
   INFO:     Application startup complete.
   ```
 
-5. Note that ray HEAD is initialized with GPU as required by vLLM. Therefore, ray HEAD node will be used as a worker with GPU.
+8. Note that ray HEAD is initialized with GPU as required by vLLM. Therefore, ray HEAD node will be used as a worker with GPU.
 
   ```
   command = "ray start --head --block --include-dashboard=true --dashboard-port=$CDSW_READONLY_PORT --num-cpus=4 --num-gpus=1 &" 
   ```
 
-6. When running [run-vllm.py](run-vllm.py) with single worker of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit in the VRAM of the GPU.
+9. When running [run-vllm.py](run-vllm.py) with single worker of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit in the VRAM of the GPU.
 ```
 ray_workers = workers.launch_workers(
     n=0, 
@@ -49,7 +69,7 @@ ray_workers = workers.launch_workers(
 os.system("vllm serve Llama-SEA-LION-v3.5-70B-R --port 8081 --tensor-parallel-size 1 > vllm.log 2>&1 &")
 ```
 
-7. When running []() with 2 worker with 1 GPU each, loading `Llama-SEA-LION-v3.5-70B-R` model is successful. This is because the model is sharded into 2 GPU.
+10. When running []() with 2 worker with 1 GPU each, loading `Llama-SEA-LION-v3.5-70B-R` model is successful. This is because the model is sharded into 2 GPU.
 ```
 ray_workers = workers.launch_workers(
     n=1, 
@@ -62,13 +82,21 @@ ray_workers = workers.launch_workers(
 os.system("vllm serve Llama-SEA-LION-v3.5-70B-R --port 8081 --tensor-parallel-size 2 > vllm.log 2>&1 &")
 ```
 
+🗒️ `Llama-SEA-LION-v3.5-70B-R` supports a very long sequence length (context window) of 131,072 tokens. To handle this, vLLM needs to pre-allocate a large block of VRAM called the KV cache. To handle a 131,072 token sequence, it needs 20.00 GiB for the KV cache. Alternatively, you can restrict the maximum number of tokens the model can process in a single request. 
+   
+12. Click on the `vllm-api` link to view the Ray dashboard and verify that the model is fully loaded across 2 workers with GPU each.
 
-8. Click on the `vllm-api` link to view the Ray dashboard and verify that the model is fully loaded across 2 workers with GPU each.
+<img width="1387" height="621" alt="image" src="https://github.com/user-attachments/assets/5a21755a-2d73-4989-ae99-20999fc85fc5" />
 
+12. Click on the `gradio-app` link to use the chat🤖.
 
-<img width="1042" height="639" alt="image" src="https://github.com/user-attachments/assets/1fb544ce-591e-4f0c-9c3e-f4ee551b1f62" />
+<img width="1243" height="747" alt="image" src="https://github.com/user-attachments/assets/187cdf45-576b-4307-b569-07be114355b2" />
 
-9. Click on the `gradio-app` link to use the chat🤖.
-
-<img width="1042" height="746" alt="image" src="https://github.com/user-attachments/assets/bc3c0b97-f3e5-48eb-9ddd-fee05906e5ce" />
-
+Sample vllm.log:
+```
+INFO 07-31 09:46:04 [logger.py:41] Received request cmpl-7f77dd0c9abf4c6f839e81d88ef37188-0: prompt: 'Singapore is a', params: SamplingParams(n=1, presence_penalty=0.0, frequency_penalty=0.0, repetition_penalty=1.0, temperature=0.0, top_p=1.0, top_k=0, min_p=0.0, seed=None, stop=[], stop_token_ids=[], bad_words=[], include_stop_str_in_output=False, ignore_eos=False, max_tokens=102, min_tokens=0, logprobs=None, prompt_logprobs=None, skip_special_tokens=True, spaces_between_special_tokens=True, truncate_prompt_tokens=None, guided_decoding=None, extra_args=None), prompt_token_ids: [128000, 92928, 374, 264], prompt_embeds shape: None, lora_request: None.
+INFO 07-31 09:46:04 [async_llm.py:269] Added request cmpl-7f77dd0c9abf4c6f839e81d88ef37188-0.
+INFO 07-31 09:46:11 [loggers.py:122] Engine 000: Avg prompt throughput: 0.4 tokens/s, Avg generation throughput: 2.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+INFO 07-31 09:46:21 [loggers.py:122] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.3%, Prefix cache hit rate: 0.0%
+INFO:     10.42.7.21:41596 - "POST /v1/completions HTTP/1.1" 200 OK
+```
