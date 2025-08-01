@@ -13,7 +13,7 @@
 ## Platform Requirement
 ✅ Python 3.11/10
 
-✅ Cloudera AI(CAI)/Cloudera Machine Learning (CML) 1.5.x
+✅ Cloudera AI (CAI) / Cloudera Machine Learning (CML) 1.5.x
 
 ## Procedure
 
