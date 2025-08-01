@@ -4,7 +4,7 @@
 
 - The article describes how vLLM and Ray work together to perform high-throughput, distributed inference on the massive 70-billion-parameter `Llama-SEA-LION-v3.5-70B-R` model.
 - vLLM uses Ray as its backend to manage the distributed worker processes, placing each tensor-parallel shard on the correct GPU across a multi-node cluster.
-- This script uses tensor parallelism (tensor_parallel_size=2) to automatically shard the model's weights and computational graph across two GPUs, making it possible to run a model that far exceeds the VRAM of a single GPU. 🚀
+- This script uses tensor parallelism (tensor-parallel-size 2) to automatically shard the model's weights and computational graph across two GPUs, making it possible to run a model that far exceeds the VRAM of a single GPU. 🚀
 
 🗒️ While you may load larger model size with more than 2 nodes, Tensor parallel workers can be spread out to more nodes which can degrade the performance unless you have fast interconnect across nodes, like Infiniband.
 
