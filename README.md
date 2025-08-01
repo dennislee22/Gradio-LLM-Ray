@@ -11,9 +11,9 @@
 ⚠️ While you may load larger model size with more than 2 nodes, Tensor parallel workers can be spread out to more nodes which can degrade the performance unless you have fast interconnect across nodes, like Infiniband.
 
 ## Platform Requirement
-☑️ Python 3.11/10
+✅ Python 3.11/10
 
-☑️ Cloudera AI(CAI)/Cloudera Machine Learning (CML) 1.5.x
+✅ Cloudera AI(CAI)/Cloudera Machine Learning (CML) 1.5.x
 
 ## Procedure
 
