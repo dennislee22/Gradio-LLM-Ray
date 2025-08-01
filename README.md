@@ -1,6 +1,6 @@
 # Gradio LLM with vLLM/Ray Distributed GPU
 
-<img width="809" height="294" alt="image" src="https://github.com/user-attachments/assets/2147ad88-f902-4f14-a6f0-9151d696897f" />
+<img width="695" height="262" alt="image" src="https://github.com/user-attachments/assets/1fcf28a7-e0ff-464c-a177-f10e24f7e969" />
 
 - The article describes how vLLM and Ray work together to perform high-throughput, distributed inference on the massive 70-billion-parameter `Llama-SEA-LION-v3.5-70B-R` model.
 - vLLM uses Ray as its backend to manage the distributed worker processes, placing each tensor-parallel shard on the correct GPU across a multi-node cluster.
