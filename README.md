@@ -62,7 +62,7 @@ dhw3fwp551sykyca   5/5     Running   0          7m13s   10.42.9.148    ares-ecs-
   command = "ray start --head --block --include-dashboard=true --dashboard-port=$CDSW_READONLY_PORT --num-cpus=4 --num-gpus=1 &" 
   ```
 
-9. When running [run-vllm.py](run-vllm.py) with single worker of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit in the VRAM of the GPU.
+9. When running [run-vllm.py](run-vllm.py) with single worker pod of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit into the VRAM of the GPU.
 ```
 ray_workers = workers.launch_workers(
     n=0, 
@@ -75,7 +75,7 @@ ray_workers = workers.launch_workers(
 os.system("vllm serve Llama-SEA-LION-v3.5-70B-R --port 8081 --tensor-parallel-size 1 > vllm.log 2>&1 &")
 ```
 
-10. When running []() with 2 worker with 1 GPU each, loading `Llama-SEA-LION-v3.5-70B-R` model is successful. This is because the model is sharded into 2 GPU.
+10. When running []() with 2 worker pods with 1 GPU each, loading `Llama-SEA-LION-v3.5-70B-R` model is successful. This is because the model is sharded into 2 GPU.
 ```
 ray_workers = workers.launch_workers(
     n=1, 
