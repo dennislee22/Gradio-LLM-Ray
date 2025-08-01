@@ -4,6 +4,7 @@
 
 - The article describes how vLLM and Ray work together to perform high-throughput, distributed inference on the massive 70-billion-parameter `Llama-SEA-LION-v3.5-70B-R` model.
 - vLLM uses Ray as its backend to manage the distributed worker processes, placing each tensor-parallel shard on the correct GPU across a multi-node cluster.
+- Leveraging Kubernetes speeds up pod scaling, enabling rapid deployment of distributed workers within seconds!
 - This script uses tensor parallelism (tensor-parallel-size 2) to automatically shard the model's weights and computational graph across two GPUs, making it possible to run a model that far exceeds the GRAM of a single GPU. 🚀
 - A Gradio web interface can be built to capture user input and make an API call to the HTTP endpoint exposed by the vLLM server, displaying the returned LLM-generated text to the user.
 
