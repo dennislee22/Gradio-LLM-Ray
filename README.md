@@ -5,7 +5,7 @@
 - The article describes how vLLM and Ray work together to perform high-throughput, distributed inference on the massive 70-billion-parameter `Llama-SEA-LION-v3.5-70B-R` model.
 - vLLM uses Ray as its backend to manage the distributed worker processes, placing each tensor-parallel shard on the correct GPU across a multi-node cluster.
 - Leveraging Kubernetes speeds up pod scaling, enabling rapid deployment of distributed workers within seconds!
-- This script uses tensor parallelism (tensor-parallel-size 2) to automatically shard the model's weights and computational graph across two GPUs, making it possible to run a model that far exceeds the GRAM of a single GPU. 🚀
+- This script [run-vllm.py](run-vllm.py) uses tensor parallelism (tensor-parallel-size 2) to automatically shard the model's weights and computational graph across two GPUs, making it possible to run a model that far exceeds the GRAM of a single GPU. 🚀
 - A Gradio web interface can be built to capture user input and make an API call to the HTTP endpoint exposed by the vLLM server, displaying the returned LLM-generated text to the user.
 
 🗒️ While you may load larger model size with more than 2 nodes, Tensor parallel workers can be spread out to more nodes which can degrade the performance unless you have fast interconnect across nodes, like Infiniband.
@@ -77,7 +77,7 @@ ray_workers = workers.launch_workers(
 os.system("vllm serve Llama-SEA-LION-v3.5-70B-R --port 8081 --tensor-parallel-size 1 > vllm.log 2>&1 &")
 ```
 
-10. When running []() with 2 worker pods with 1 GPU each, loading `Llama-SEA-LION-v3.5-70B-R` model is successful. This is because the model is sharded into 2 GPU.
+10. When running [run-vllm.py](run-vllm.py) with 2 worker pods with 1 GPU each, loading `Llama-SEA-LION-v3.5-70B-R` model is successful. This is because the model is sharded into 2 GPU.
 ```
 ray_workers = workers.launch_workers(
     n=1, 
