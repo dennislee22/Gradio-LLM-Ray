@@ -4,7 +4,7 @@
 
 - The article describes how vLLM and Ray work together to perform high-throughput, distributed inference on the massive 70-billion-parameter `Llama-SEA-LION-v3.5-70B-R` model.
 - vLLM uses Ray as its backend to manage the distributed worker processes, placing each tensor-parallel shard on the correct GPU across a multi-node cluster.
-- This script uses tensor parallelism (tensor-parallel-size 2) to automatically shard the model's weights and computational graph across two GPUs, making it possible to run a model that far exceeds the VRAM of a single GPU. 🚀
+- This script uses tensor parallelism (tensor-parallel-size 2) to automatically shard the model's weights and computational graph across two GPUs, making it possible to run a model that far exceeds the GRAM of a single GPU. 🚀
 
 🗒️ While you may load larger model size with more than 2 nodes, Tensor parallel workers can be spread out to more nodes which can degrade the performance unless you have fast interconnect across nodes, like Infiniband.
 
@@ -42,7 +42,7 @@ NAME               READY   STATUS    RESTARTS   AGE     IP             NODE     
 dhw3fwp551sykyca   5/5     Running   0          7m13s   10.42.9.148    ares-ecs-ws-gpu01.ares.olympus.cloudera.com   <none>           <none>
 ```
 
-7. Subsequently, the model will be loaded into the GPU VRAM. Depending on the size of the model, loading might take some time to complete. Once loaded, it is ready to serve queries. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
+7. Subsequently, the model will be loaded into the GRAM. Depending on the size of the model, loading might take some time to complete. Once loaded, it is ready to serve queries. The following log shows model has been loaded successfully and vLLM application has started (vllm.log):
   ```
    Loading safetensors checkpoint shards:  83% Completed | 25/30 [1:23:11<15:58, 191.63s/it]
    Loading safetensors checkpoint shards:  87% Completed | 26/30 [1:26:52<13:21, 200.44s/it]
@@ -62,7 +62,7 @@ dhw3fwp551sykyca   5/5     Running   0          7m13s   10.42.9.148    ares-ecs-
   command = "ray start --head --block --include-dashboard=true --dashboard-port=$CDSW_READONLY_PORT --num-cpus=4 --num-gpus=1 &" 
   ```
 
-9. When running [run-vllm.py](run-vllm.py) with single worker pod of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit into the VRAM of the GPU.
+9. When running [run-vllm.py](run-vllm.py) with single worker pod of 1 GPU, loading `Llama-SEA-LION-v3.5-70B-R` model will result in `torch.OutOfMemoryError: CUDA out of memory` error. This is because the model is too huge to fit into the GRAM.
 ```
 ray_workers = workers.launch_workers(
     n=0, 
@@ -88,7 +88,7 @@ ray_workers = workers.launch_workers(
 os.system("vllm serve Llama-SEA-LION-v3.5-70B-R --port 8081 --tensor-parallel-size 2 > vllm.log 2>&1 &")
 ```
 
-🗒️ `Llama-SEA-LION-v3.5-70B-R` supports a very long sequence length (context window) of 131,072 tokens. To handle this, vLLM needs to pre-allocate a large block of VRAM called the KV cache. To handle a 131,072 token sequence, it needs 20.00 GiB for the KV cache. Alternatively, you can restrict the maximum number of tokens the model can process in a single request. 
+🗒️ `Llama-SEA-LION-v3.5-70B-R` supports a very long sequence length (context window) of 131,072 tokens. To handle this, vLLM needs to pre-allocate a large block of GRAM called the KV cache. To handle a 131,072 token sequence, it needs 20.00 GiB for the KV cache. Alternatively, you can restrict the maximum number of tokens the model can process in a single request. 
    
 11. Click on the `vllm-api` link to view the Ray dashboard and verify that the model is fully loaded across 2 workers with one GPU each.
 
