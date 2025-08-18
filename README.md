@@ -1,4 +1,4 @@
-# Gradio LLM with vLLM/Ray Distributed GPU
+# Gradio → vLLM/Ray Distributed GPU
 
 <img width="695" height="262" alt="image" src="https://github.com/user-attachments/assets/1fcf28a7-e0ff-464c-a177-f10e24f7e969" />
 
