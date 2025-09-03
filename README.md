@@ -21,7 +21,7 @@
    
 2. Install python libraries.
   ```
-  pip install vllm torch transformers ipywidgets gradio ray[default]
+  pip install vllm torch transformers ipywidgets gradio ray[default] flashinfer-python
   ```
 
 3. Download the pre-trained LLM into the project of the CAI/CML platform using either `git clone` or `wget`.
